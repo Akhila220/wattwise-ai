@@ -3,7 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 # Base class for all database table models.
 class Base(DeclarativeBase):
@@ -38,3 +38,19 @@ def test_db_connection():
             text("SELECT current_database()")
         )
         return result.scalar_one()
+
+# Create a reusable database session factory.
+SessionLocal = sessionmaker(
+    bind=engine,
+    autoflush=False,
+    autocommit=False,
+)
+
+
+# Provide a database session to API endpoints.
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
