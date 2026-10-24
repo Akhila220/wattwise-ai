@@ -8,3 +8,4 @@ joblib
 sqlalchemy
 psycopg[binary]
 python-dotenv
+pwdlib[argon2]
